@@ -7,6 +7,9 @@ import android.graphics.Bitmap;
  */
 
 public class AlbumInfo {
+
+
+    String artistID;
     String artistName;
     String releaseYear;
     String ablumTitle;
@@ -41,6 +44,13 @@ public class AlbumInfo {
     }
 
     public void setThumnail(Bitmap thumbnail) {
-        this.albumThump = thumbnail;
+        albumThump = thumbnail;
+    }
+    public String getArtistID() {
+        return artistID;
+    }
+
+    public void setArtistID(String artistID) {
+        this.artistID = artistID;
     }
 }

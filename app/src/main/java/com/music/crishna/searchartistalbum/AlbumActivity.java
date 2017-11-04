@@ -27,6 +27,7 @@ import java.util.List;
 
 public class AlbumActivity extends AppCompatActivity {
     private SearchView searchView;
+    ParseSearchResults parseSearchResults;
     LoadSearchResults loadAlbumDataCloud;
     RecyclerView recyclerView;
     AlbumAdapter albumAdapter;
@@ -84,7 +85,7 @@ public class AlbumActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String json) {
             super.onPostExecute(json);
-            ParseSearchResults parseSearchResults=new ParseSearchResults();
+            parseSearchResults=new ParseSearchResults();
             parseSearchResults.setJsonData(json);
             String aid=parseSearchResults.getArtistId();
            // http://api.discogs.com/artists/3317315/releases
@@ -124,9 +125,12 @@ public class AlbumActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String releasesJSONText) {
             super.onPostExecute(releasesJSONText);
-           // Log.i("aasd","asdas"+releasesJSONText);
-            ParseSearchResults parseSearchResults=new ParseSearchResults();
-            ArrayList<AlbumInfo> albumInfos=(ArrayList)parseSearchResults.getAlbumInfo(releasesJSONText);
+            ArrayList<AlbumInfo> albumInfos= null;
+            try {
+                albumInfos = (ArrayList)parseSearchResults.getAlbumInfo(releasesJSONText,parseSearchResults.getArtistId());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             RecyclerView.LayoutManager layoutManager=new GridLayoutManager(AlbumActivity.this,2);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);

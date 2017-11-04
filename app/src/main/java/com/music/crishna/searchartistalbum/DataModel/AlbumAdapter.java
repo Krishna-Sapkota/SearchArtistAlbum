@@ -46,6 +46,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumContent
         String albumTitle=albumInfos.get(position).getAblumTitle();
         String releaseYear=albumInfos.get(position).getReleaseYear();
         holder.artisName.setText(artistName);
+        holder.albumArt.setImageBitmap(albumInfos.get(position).getThumbnail());
         holder.albumTitle.setText(albumTitle);
         holder.releaseYear.setText(releaseYear);
     }

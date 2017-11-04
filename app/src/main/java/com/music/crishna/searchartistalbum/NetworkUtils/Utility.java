@@ -1,5 +1,7 @@
 package com.music.crishna.searchartistalbum.NetworkUtils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
@@ -40,6 +42,23 @@ public class Utility {
 
         return url;
     }
+    public static Bitmap getBitmapFromURL(String src) {
+        HttpURLConnection connection=null;
+        try {
+            URL url = new URL(src);
+             connection= (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
+        finally {
+        }
+    }
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -63,10 +82,7 @@ public class Utility {
         }
 
         finally {
-
             urlConnection.disconnect();
-
-            in.close();
         }
     }
 
