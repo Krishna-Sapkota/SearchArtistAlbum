@@ -79,8 +79,12 @@ public class ParseSearchResults {
                 AlbumInfo albumInfo=new AlbumInfo();
                 albumInfo.setAblumTitle(object.getString("title"));
                 albumInfo.setArtistName(object.getString("artist"));
+                String abc=object.getString("thumb");
+                Log.i("test:",abc);
               //  albumInfo.setThumnail(Integer.parseInt(object.getString("thumb")));
-                albumInfo.setReleaseYear(object.getString("year"));
+                albumInfo.setReleaseYear(object.optString("year"));
+
+
 
                 albums.add(albumInfo);
             } catch (JSONException e) {

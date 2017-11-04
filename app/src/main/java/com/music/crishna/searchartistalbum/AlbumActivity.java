@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.music.crishna.searchartistalbum.DataModel.AlbumAdapter;
 import com.music.crishna.searchartistalbum.DataModel.AlbumInfo;
 import com.music.crishna.searchartistalbum.NetworkUtils.ParseSearchResults;
 import com.music.crishna.searchartistalbum.NetworkUtils.Utility;
@@ -25,10 +28,14 @@ import java.util.List;
 public class AlbumActivity extends AppCompatActivity {
     private SearchView searchView;
     LoadSearchResults loadAlbumDataCloud;
+    RecyclerView recyclerView;
+    AlbumAdapter albumAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
+        recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
         loadAlbumDataCloud=new LoadSearchResults();
     }
 
@@ -120,14 +127,25 @@ public class AlbumActivity extends AppCompatActivity {
            // Log.i("aasd","asdas"+releasesJSONText);
             ParseSearchResults parseSearchResults=new ParseSearchResults();
             ArrayList<AlbumInfo> albumInfos=(ArrayList)parseSearchResults.getAlbumInfo(releasesJSONText);
-            Iterator<AlbumInfo> albumInfoIterator=albumInfos.iterator();
-            while (albumInfoIterator.hasNext()){
+            RecyclerView.LayoutManager layoutManager=new GridLayoutManager(AlbumActivity.this,2);
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setHasFixedSize(true);
+
+            albumAdapter=new AlbumAdapter(albumInfos);
+            recyclerView.setAdapter(albumAdapter);
+
+          //  Iterator<AlbumInfo> albumInfoIterator=albumInfos.iterator();
+           /* while (albumInfoIterator.hasNext()){
                 AlbumInfo a=albumInfoIterator.next();
                 String year=a.getReleaseYear();
                 String title=a.getAblumTitle();
+                String artist=a.getArtistName();
+                Log.i("test","Artist Name:"+artist);
                 Log.i("Test","Releases Year:"+year);
                 Log.i("Test","Album name Year:"+title);
-            }
+
+            }*/
+
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.music.crishna.searchartistalbum.DataModel;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Krishna on 11/3/17.
  */
@@ -8,7 +10,7 @@ public class AlbumInfo {
     String artistName;
     String releaseYear;
     String ablumTitle;
-    int thumnail;
+    Bitmap albumThump;
 
     public String getArtistName() {
         return artistName;
@@ -34,11 +36,11 @@ public class AlbumInfo {
         this.ablumTitle = ablumTitle;
     }
 
-    public int getThumnail() {
-        return thumnail;
+    public Bitmap getThumbnail() {
+        return albumThump;
     }
 
-    public void setThumnail(int thumnail) {
-        this.thumnail = thumnail;
+    public void setThumnail(Bitmap thumbnail) {
+        this.albumThump = thumbnail;
     }
 }

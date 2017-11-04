@@ -54,8 +54,6 @@ public class Utility {
 
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
-                Log.i("final","Come1");
-
                 return scanner.next();
 
             } else {
