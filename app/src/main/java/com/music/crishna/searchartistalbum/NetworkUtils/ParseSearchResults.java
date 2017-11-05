@@ -62,15 +62,19 @@ public class ParseSearchResults {
         JSONObject id= null;
         try {
             id = searchResults.getJSONArray("results").getJSONObject(0);
+            if(id==null||id.equals("")) {
+                return null;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         String artistId= null;
-        try {
-            artistId = id.getString("id");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            if(id!=null)
+            artistId = id.optString("id");
+            if(artistId==null||artistId.equals("")) {
+                return null;
+            }
+
         Log.i("ID","ID:::"+artistId);
         return artistId;
     }
@@ -104,6 +108,13 @@ public class ParseSearchResults {
     }
 
     public class ImageLinkDownloadTask extends AsyncTask<URL,Void,String[]>{
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            AlbumActivity.loadingMessage.setText("Searching for albums images....");
+
+        }
+
         @Override
         protected String[] doInBackground(URL... urls) {
             String[] imgUrl=new String[5];
@@ -162,6 +173,8 @@ public class ParseSearchResults {
                     String[] url = new String[5];
                     try {
                         url = task1.execute(new URL("https://www.discogs.com/release/" + relaseID)).get();
+                        AlbumActivity.loadingMessage.setText("Loaded "+current+" album images...");
+
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
@@ -182,6 +195,8 @@ public class ParseSearchResults {
             }
             current++;
         }
+        AlbumActivity.loadingMessage.setText("Image load completed..");
+
         return albums;
     }
 }

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +25,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class AlbumActivity extends AppCompatActivity {
@@ -34,6 +33,8 @@ public class AlbumActivity extends AppCompatActivity {
     LoadSearchResults loadAlbumDataCloud;
     RecyclerView recyclerView;
     TextView artistProfileTextView;
+    public static TextView loadingMessage;
+    public static ProgressBar progressBar;
     AlbumAdapter albumAdapter;
 
     @Override
@@ -41,7 +42,9 @@ public class AlbumActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
         recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
-        artistProfileTextView=(TextView)findViewById((R.id.tv_artist_profile));
+        artistProfileTextView=(TextView)findViewById(R.id.tv_artist_loading_profile);
+        loadingMessage=(TextView)findViewById(R.id.tv_loading_message);
+        progressBar=(ProgressBar)findViewById(R.id.progress_indicator);
 
     }
 
@@ -60,6 +63,8 @@ public class AlbumActivity extends AppCompatActivity {
                 loadAlbumDataCloud=new LoadSearchResults();
                 searchItem.collapseActionView();
                 URL url=Utility.buildUrl(query);
+
+
                 loadAlbumDataCloud.execute(url);
                 return false;
             }
@@ -88,12 +93,27 @@ public class AlbumActivity extends AppCompatActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+            loadingMessage.setText("Searching for artist...");
+        }
+
+        @Override
         protected void onPostExecute(String json) {
             super.onPostExecute(json);
+
             parseSearchResults=new ParseSearchResults();
             parseSearchResults.setJsonData(json);
             String aid=parseSearchResults.getArtistId();
-           // http://api.discogs.com/artists/3317315/releases
+            if(aid==null||aid.equals("")){
+                loadingMessage.setText("Cannot find such artist!");
+                progressBar.setVisibility(View.INVISIBLE);
+                return;
+            }
+            loadingMessage.setText("Artist loaded!");
+
+            // http://api.discogs.com/artists/3317315/releases
             Uri releasesUri= Uri.parse("https://api.discogs.com").buildUpon()
                              .appendPath("artists")
                              .appendPath(aid)
@@ -112,6 +132,15 @@ public class AlbumActivity extends AppCompatActivity {
     }
 
     public class LoadAlbumReleases extends AsyncTask<URL,Void,String>{
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingMessage.setText("Loading album releases...");
+
+        }
+
         @Override
         protected String doInBackground(URL... urls) {
             URL url=urls[0];
@@ -122,14 +151,18 @@ public class AlbumActivity extends AppCompatActivity {
                  releasesJSONText= Utility.getResponseFromHttpUrl(url);
             } catch (IOException e) {
             }
-
+            publishProgress();
            // Log.i("AlBUM",releasesJSONText);
             return releasesJSONText;
         }
 
+
+
         @Override
         protected void onPostExecute(String releasesJSONText) {
             super.onPostExecute(releasesJSONText);
+            loadingMessage.setText("Album releases loaded...");
+
             String artistProfile;
             LoadArtistProfileTask task=new LoadArtistProfileTask();
 
@@ -137,13 +170,15 @@ public class AlbumActivity extends AppCompatActivity {
             String artistProfileJSON=null;
             try {
                 artistProfileJSON=task.execute(new URL(profileURL)).get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+                loadingMessage.setText("Artist profile loaded..");
+
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setIndeterminate(true);
             artistProfile=parseSearchResults.getArtistProfile(artistProfileJSON);
             artistProfileTextView.setText(artistProfile);
             ArrayList<AlbumInfo> albumInfos= null;
@@ -158,13 +193,15 @@ public class AlbumActivity extends AppCompatActivity {
             RecyclerView.LayoutManager layoutManager=new GridLayoutManager(AlbumActivity.this,1);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            recyclerView.setItemViewCacheSize(60);
+            recyclerView.setItemViewCacheSize(100);
             recyclerView.setDrawingCacheEnabled(true);
             recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
 
             albumAdapter=new AlbumAdapter(albumInfos);
             recyclerView.setAdapter(albumAdapter);
+            progressBar.setVisibility(View.INVISIBLE);
+            loadingMessage.setVisibility(View.INVISIBLE);
 
           //  Iterator<AlbumInfo> albumInfoIterator=albumInfos.iterator();
            /* while (albumInfoIterator.hasNext()){
@@ -182,6 +219,13 @@ public class AlbumActivity extends AppCompatActivity {
     }
     public class LoadArtistProfileTask extends AsyncTask<URL,Void,String>{
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadingMessage.setText("Loading artist profile");
+
+        }
+
+        @Override
         protected String doInBackground(URL... urls) {
             URL url=urls[0];
             String profileJSON=null;
@@ -192,5 +236,6 @@ public class AlbumActivity extends AppCompatActivity {
             }
             return profileJSON;
         }
+
     }
 }
