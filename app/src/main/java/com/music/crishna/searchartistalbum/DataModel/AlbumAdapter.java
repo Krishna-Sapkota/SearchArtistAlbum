@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.music.crishna.searchartistalbum.AlbumActivity;
 import com.music.crishna.searchartistalbum.NetworkUtils.Utility;
 import com.music.crishna.searchartistalbum.R;
 
@@ -58,24 +59,25 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumContent
         Bitmap bitmap = null;
         String url=albumInfos.get(position).getThumbnailURL();
 
+
         try {
-            try {
-                bitmap=task2.execute(url).get();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+            bitmap = task2.execute(url).get();
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
+
         holder.albumArt.setImageBitmap(bitmap);
+
         if(bitmap!=null) {
             final double viewWidthToBitmapWidthRatio = (double) holder.albumArt.getWidth() / (double) holder.albumArt.getWidth();
             holder.albumArt.getLayoutParams().height = (int) (bitmap.getHeight() * viewWidthToBitmapWidthRatio);
         }
-
         holder.albumTitle.setText(albumTitle);
         holder.releaseYear.setText(releaseYear);
+
     }
 
     public class AlbumContentViewHolder extends RecyclerView.ViewHolder{
@@ -98,12 +100,15 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumContent
         return albumInfos.size();
     }
     public  class BitmapDownloadTask extends AsyncTask<String,Void,Bitmap> {
+
+
         @Override
         protected Bitmap doInBackground(String... strings) {
             String url = strings[0];
             Bitmap b = Utility.getBitmapFromURL(url);
             return b;
         }
+
     }
 
 
