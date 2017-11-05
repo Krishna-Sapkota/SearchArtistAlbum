@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.music.crishna.searchartistalbum.DataModel.AlbumAdapter;
@@ -24,12 +25,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class AlbumActivity extends AppCompatActivity {
     private SearchView searchView;
     ParseSearchResults parseSearchResults;
     LoadSearchResults loadAlbumDataCloud;
     RecyclerView recyclerView;
+    TextView artistProfileTextView;
     AlbumAdapter albumAdapter;
 
     @Override
@@ -37,7 +40,8 @@ public class AlbumActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
         recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
-        loadAlbumDataCloud=new LoadSearchResults();
+        artistProfileTextView=(TextView)findViewById((R.id.tv_artist_profile));
+
     }
 
     @Override
@@ -52,7 +56,7 @@ public class AlbumActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(AlbumActivity.this,"Searching",Toast.LENGTH_LONG).show();
-
+                loadAlbumDataCloud=new LoadSearchResults();
                 searchItem.collapseActionView();
                 URL url=Utility.buildUrl(query);
                 loadAlbumDataCloud.execute(url);
@@ -125,12 +129,31 @@ public class AlbumActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String releasesJSONText) {
             super.onPostExecute(releasesJSONText);
+            String artistProfile;
+            LoadArtistProfileTask task=new LoadArtistProfileTask();
+
+            String profileURL="https://api.discogs.com/artists/"+parseSearchResults.getArtistId();
+            String artistProfileJSON=null;
+            try {
+                artistProfileJSON=task.execute(new URL(profileURL)).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            artistProfile=parseSearchResults.getArtistProfile(artistProfileJSON);
+            artistProfileTextView.setText(artistProfile);
             ArrayList<AlbumInfo> albumInfos= null;
             try {
                 albumInfos = (ArrayList)parseSearchResults.getAlbumInfo(releasesJSONText,parseSearchResults.getArtistId());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
+
+
+
             RecyclerView.LayoutManager layoutManager=new GridLayoutManager(AlbumActivity.this,1);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
@@ -150,6 +173,19 @@ public class AlbumActivity extends AppCompatActivity {
 
             }*/
 
+        }
+    }
+    public class LoadArtistProfileTask extends AsyncTask<URL,Void,String>{
+        @Override
+        protected String doInBackground(URL... urls) {
+            URL url=urls[0];
+            String profileJSON=null;
+            try {
+                profileJSON=Utility.getResponseFromHttpUrl(url);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return profileJSON;
         }
     }
 }

@@ -87,6 +87,22 @@ public class ParseSearchResults {
         return bitmap;
     }
 
+    public String getArtistProfile(String artistProfileJSON) {
+        JSONObject profileJSON=null;
+        try {
+             profileJSON=new JSONObject(artistProfileJSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String artistProfile=null;
+        try {
+             artistProfile=profileJSON.getString("profile");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return artistProfile;
+    }
+
     public class ImageLinkDownloadTask extends AsyncTask<URL,Void,String[]>{
         @Override
         protected String[] doInBackground(URL... urls) {
