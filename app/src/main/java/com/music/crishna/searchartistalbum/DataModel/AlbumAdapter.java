@@ -1,6 +1,7 @@
 package com.music.crishna.searchartistalbum.DataModel;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,10 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumContent
         String albumTitle=albumInfos.get(position).getAblumTitle();
         String releaseYear=albumInfos.get(position).getReleaseYear();
         holder.artisName.setText(artistName);
+        Bitmap bitmap=albumInfos.get(position).getThumbnail();
+        final double viewWidthToBitmapWidthRatio = (double)holder.albumArt.getWidth() / (double)holder.albumArt.getWidth();
+        holder.albumArt.getLayoutParams().height = (int) (bitmap.getHeight() * viewWidthToBitmapWidthRatio);
+
         holder.albumArt.setImageBitmap(albumInfos.get(position).getThumbnail());
         holder.albumTitle.setText(albumTitle);
         holder.releaseYear.setText(releaseYear);

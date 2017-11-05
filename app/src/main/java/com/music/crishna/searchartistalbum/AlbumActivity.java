@@ -51,7 +51,7 @@ public class AlbumActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(AlbumActivity.this,"Searched",Toast.LENGTH_LONG).show();
+                Toast.makeText(AlbumActivity.this,"Searching",Toast.LENGTH_LONG).show();
 
                 searchItem.collapseActionView();
                 URL url=Utility.buildUrl(query);
@@ -131,7 +131,7 @@ public class AlbumActivity extends AppCompatActivity {
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-            RecyclerView.LayoutManager layoutManager=new GridLayoutManager(AlbumActivity.this,2);
+            RecyclerView.LayoutManager layoutManager=new GridLayoutManager(AlbumActivity.this,1);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
 

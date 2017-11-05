@@ -159,9 +159,7 @@ public class ParseSearchResults {
                     }
                     BitmapDownloadTask task2 = new BitmapDownloadTask();
                     Bitmap bitmap = null;
-                  //  Log.i("URL", url[0]);
-                    //Log.i("URL", url[1]);
-                    //Log.i("URL", url[2]);
+
 
                     try {
                         bitmap = task2.execute(url[1]).get();
@@ -174,12 +172,7 @@ public class ParseSearchResults {
                     albumInfo.setThumnail(bitmap);
 
 
-                  //  Log.i("there", bitmap.toString());
-                   // if (bitmap == null) {
-                   //     Log.i("NULL", "Null cha");
-                  //  } else {
-                        //Log.i("NULL", "Null chaina " + object.getString("id") + " " + url[1]);
-                   // }
+
                 }
                 albumInfo.setReleaseYear(object.optString("year"));
 
