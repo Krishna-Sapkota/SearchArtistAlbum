@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -157,6 +158,10 @@ public class AlbumActivity extends AppCompatActivity {
             RecyclerView.LayoutManager layoutManager=new GridLayoutManager(AlbumActivity.this,1);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
+            recyclerView.setItemViewCacheSize(60);
+            recyclerView.setDrawingCacheEnabled(true);
+            recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+
 
             albumAdapter=new AlbumAdapter(albumInfos);
             recyclerView.setAdapter(albumAdapter);

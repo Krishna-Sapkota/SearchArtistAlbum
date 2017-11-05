@@ -13,7 +13,7 @@ public class AlbumInfo {
     String artistName;
     String releaseYear;
     String ablumTitle;
-    Bitmap albumThump;
+    String albumThumpURL;
 
     public String getArtistName() {
         return artistName;
@@ -39,12 +39,12 @@ public class AlbumInfo {
         this.ablumTitle = ablumTitle;
     }
 
-    public Bitmap getThumbnail() {
-        return albumThump;
+    public String getThumbnailURL() {
+        return albumThumpURL;
     }
 
-    public void setThumnail(Bitmap thumbnail) {
-        albumThump = thumbnail;
+    public void setThumnailURL(String thumbnail) {
+        albumThumpURL = thumbnail;
     }
     public String getArtistID() {
         return artistID;

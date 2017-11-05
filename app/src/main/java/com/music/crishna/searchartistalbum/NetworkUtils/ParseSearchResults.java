@@ -126,16 +126,10 @@ public class ParseSearchResults {
         }
 
     }
-    public class BitmapDownloadTask extends AsyncTask<String,Void,Bitmap>{
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            String url=strings[0];
-            Bitmap b=Utility.getBitmapFromURL(url);
-            return b;
-        }
+   /*
 
 
-    }
+    }*/
 
     public ArrayList<AlbumInfo> getAlbumInfo(String releasesJSONText, String artistId) throws MalformedURLException {
         JSONObject releases=null;
@@ -157,9 +151,7 @@ public class ParseSearchResults {
                 albumInfo.setArtistID(artistId);
                 albumInfo.setAblumTitle(object.getString("title"));
                 albumInfo.setArtistName(object.getString("artist"));
-                if(albumInfo!=null){
-                    Log.i("release",object.getString("id"));
-                }
+
                 String abc=object.getString("thumb");
                 final String[] imgUrl=new String[5];
                 Log.i("test:","asdASD"+artistId);
@@ -173,19 +165,9 @@ public class ParseSearchResults {
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
-                    BitmapDownloadTask task2 = new BitmapDownloadTask();
-                    Bitmap bitmap = null;
+                   /* */
 
-
-                    try {
-                        bitmap = task2.execute(url[1]).get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-
-                    albumInfo.setThumnail(bitmap);
+                    albumInfo.setThumnailURL(url[1]);
 
 
 

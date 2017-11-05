@@ -3,6 +3,7 @@ package com.music.crishna.searchartistalbum.NetworkUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.IOException;
@@ -85,8 +86,6 @@ public class Utility {
             urlConnection.disconnect();
         }
     }
-
-
 
 
 }
