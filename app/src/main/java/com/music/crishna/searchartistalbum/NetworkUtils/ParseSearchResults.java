@@ -179,9 +179,12 @@ public class ParseSearchResults {
                         e.printStackTrace();
                     }
                    /* */
-
-                    albumInfo.setThumnailURL(url[1]);
-
+                    if(url!=null) {
+                        albumInfo.setThumnailURL(url[1]);
+                    }
+                    else{
+                        albumInfo.setThumnailURL(null);
+                    }
 
 
                 }
